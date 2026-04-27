@@ -1,25 +1,32 @@
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
 
-#define MIN_ASCII 32
-#define MAX_ASCII 126
-#define RANGE (MAX_ASCII - MIN_ASCII + 1)
+void vigenereDecrypt(char *ciphertext, char *key) {
+    int i, j;
+    int msgLen = strlen(ciphertext);
+    int keyLen = strlen(key);
+    char ch;
+    for (i = 0, j = 0; i < msgLen; i++) {
+        ch = ciphertext[i];
+        if (isalpha(ch)) {
+            char offset = isupper(ch) ? 'A' : 'a';
+            int k = tolower(key[j % keyLen]) - 'a';
+            int p = (ch - offset - k + 26) % 26;
+            ciphertext[i] = p + offset;
 
-// Function to decrypt the message
-void decrypt(char *message, char *key) {
-    int keyLength = strlen(key);
-    for (int i = 0; message[i] != '\0'; i++) {
-        message[i] = MIN_ASCII + ((message[i] - MIN_ASCII - (key[i % keyLength] - MIN_ASCII) + RANGE) % RANGE);
+            j++;
+        }
     }
 }
 
 int main() {
-    char message[] = "0?13j#s^kd!ncji0"; // Message to encrypt
-    char key[] = "temporary_key";              // Encryption key
+    char ciphertext[] = "!gsaH xinH ,fmaskgW rudT"; //Pesan Enkripsi
+    char key[] = "tempkey";
 
-    // Decrypt the message
-    decrypt(message, key);
-    printf("Decrypted message: %s\n", message);
+    printf("Encypted Text : %s\n", ciphertext);
+    vigenereDecrypt(ciphertext, key);
+    printf("Deciphered : %s\n", ciphertext);
 
     return 0;
 }
